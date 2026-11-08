@@ -778,24 +778,23 @@ export default function DiwaliScene({
           });
         }
 
-        if (stateTimer > 1.2) {
+        if (stateTimer > 0.75) {
           triggerExplosion();
         }
       } else if (state === 'bursting') {
         stateTimer += delta;
         wickLight.intensity = 0;
 
-        // 10-SECOND ANIMATION FOR EACH CRACKER
-        const TOTAL_DURATION = 10.0; // 10 seconds full animation!
+        // 5-SECOND DURATION FOR ALL CRACKERS (Fast, snappy, grand celebration)
+        const TOTAL_DURATION = 5.0;
 
         if (currentRenderedCracker === 'anar') {
-          // Sustained volcanic fountain erupting high into the sky for 10 seconds!
+          // Volcanic fountain erupting high into the sky for 5 seconds
           if (stateTimer < TOTAL_DURATION) {
-            // Evolving height curve
-            const heightMultiplier = stateTimer < 2.5
-              ? 0.5 + (stateTimer / 2.5) * 0.5
-              : stateTimer > 8.0
-              ? Math.max(0.2, (TOTAL_DURATION - stateTimer) / 2.0)
+            const heightMultiplier = stateTimer < 1.2
+              ? 0.5 + (stateTimer / 1.2) * 0.5
+              : stateTimer > 4.0
+              ? Math.max(0.2, (TOTAL_DURATION - stateTimer) / 1.0)
               : 1.0;
 
             const spawnCount = isSoftwareGl ? 8 : 18;

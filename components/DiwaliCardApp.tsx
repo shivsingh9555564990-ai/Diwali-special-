@@ -205,13 +205,13 @@ export default function DiwaliCardApp() {
     // 2. Smoothly drop all characters and buttons down off the screen!
     setIsBlasted(true);
 
-    // 3. Keep scene in full 10-second fireworks spectacle, then smoothly restore characters to normal!
+    // 3. Keep scene in full 5-second fireworks spectacle, then smoothly restore characters to normal!
     if (blastResetTimeoutRef.current) {
       clearTimeout(blastResetTimeoutRef.current);
     }
     blastResetTimeoutRef.current = setTimeout(() => {
       setIsBlasted(false);
-    }, 10000); // 10 seconds of full-screen celebratory animation!
+    }, 5000); // 5 seconds of full-screen celebratory animation!
   }, []);
 
   // AUTO IGNITE ON CRACKER SELECTION
@@ -226,7 +226,7 @@ export default function DiwaliCardApp() {
     if (cType === 'bomb') {
       setTimeout(() => {
         handleBlastTrigger();
-      }, 1200); // sync with fuse burn
+      }, 750); // sync with fast 0.75s fuse burn
     }
   };
 
@@ -409,8 +409,8 @@ export default function DiwaliCardApp() {
         }}
       />
 
-      {/* 2. Top Bar: Clean & Elegant "CONSTRUCTED BY SHIV" (No extra share button on top) */}
-      <header className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-3 bg-gradient-to-b from-black/90 via-black/40 to-transparent">
+      {/* 2. Top Bar: Clean & Elegant "CONSTRUCTED BY SHIV" (Transparent header) */}
+      <header className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-2.5 bg-gradient-to-b from-black/25 to-transparent">
         <div className="flex items-center gap-2 mx-auto sm:mx-0">
           <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-amber-600 via-orange-500 to-yellow-300 flex items-center justify-center shadow-[0_0_15px_rgba(255,200,0,0.8)] border border-yellow-200">
             <span className="text-sm sm:text-base">🪔</span>
@@ -437,16 +437,15 @@ export default function DiwaliCardApp() {
         </div>
       </header>
 
-      {/* 3. Upper Elegant Diwali Card: Displays sender & recipient with glowing 3D animated letters! */}
-      {/* On Bomb blast, character and card elements smoothly drop down off screen for 10s */}
+      {/* 3. Upper Elegant Diwali Card: TRANSPARENT BOX so 3D scene shines through! */}
       <section
         className={`relative z-10 w-full max-w-3xl mx-auto px-4 pt-1 sm:pt-2 text-center pointer-events-none transition-all duration-700 ${
           isBlasted ? 'animate-blast-drop' : 'animate-rise-back'
         }`}
       >
-        <div className="inline-block p-3.5 sm:p-5 rounded-3xl bg-black/60 backdrop-blur-md border border-amber-500/40 shadow-[0_4px_30px_rgba(0,0,0,0.85)] pointer-events-auto max-w-2xl mx-auto">
+        <div className="inline-block p-3.5 sm:p-5 rounded-3xl bg-black/10 backdrop-blur-[2px] border border-amber-400/35 shadow-[0_0_25px_rgba(255,200,0,0.15)] pointer-events-auto max-w-2xl mx-auto">
           {/* Top Festive Ribbon */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/25 to-amber-500/20 border border-amber-400/50 mb-1.5 shadow-[0_0_15px_rgba(255,200,0,0.3)]">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/40 mb-1.5 shadow-[0_0_12px_rgba(255,200,0,0.2)]">
             <span className="text-amber-400 text-xs sm:text-sm">🪔</span>
             <span className="text-[11px] sm:text-xs md:text-sm font-black tracking-widest text-amber-200 uppercase font-['Cinzel',serif]">
               शुभ दीपावली की हार्दिक शुभकामनाएं
@@ -475,11 +474,11 @@ export default function DiwaliCardApp() {
             </h2>
           </div>
 
-          {/* Sender Signature: PROPER ANIMATED IN 3D MULTI-COLOR STYLE (LIKE CONSTRUCTED BY SHIV) */}
+          {/* Sender Signature: TRANSPARENT GLOWING BUTTON */}
           <div className="mt-2.5 flex items-center justify-center">
             <button
               onClick={handleOpenShareModal}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/80 border border-amber-400/70 shadow-[0_0_20px_rgba(255,180,0,0.5)] hover:border-yellow-300 hover:scale-105 transition-all cursor-pointer group"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/15 backdrop-blur-[2px] border border-amber-400/60 shadow-[0_0_15px_rgba(255,180,0,0.3)] hover:border-yellow-300 hover:scale-105 transition-all cursor-pointer group"
               title="नाम बदलें या कार्ड शेयर करें"
             >
               <span className="text-xs sm:text-sm text-amber-300 font-bold">शुभकामनाएं प्रेषक:</span>
@@ -496,15 +495,14 @@ export default function DiwaliCardApp() {
       {/* 4. Center Area is clear for 3D Cracker view */}
       <div className="flex-1 pointer-events-none" />
 
-      {/* 5. Lower Action Deck: Smoothly drops down on blast, then returns after 10s */}
-      {/* 360 degree text removed! Three dot / sliders button removed! Clean and grand! */}
+      {/* 5. Lower Action Deck: TRANSPARENT BUTTONS & CRACKER BAR */}
       <section
         className={`relative z-20 w-full max-w-3xl mx-auto px-3 pb-3 flex flex-col items-center gap-2 pointer-events-auto transition-all duration-700 ${
           isBlasted ? 'animate-blast-drop' : 'animate-rise-back'
         }`}
       >
-        {/* Cracker Selection Bar */}
-        <div className="w-full flex items-center justify-center flex-wrap gap-1.5 sm:gap-2 px-2 py-2 rounded-2xl bg-black/60 backdrop-blur-md border border-amber-500/30 shadow-[0_0_20px_rgba(0,0,0,0.7)]">
+        {/* Cracker Selection Bar: Transparent container */}
+        <div className="w-full flex items-center justify-center flex-wrap gap-1.5 sm:gap-2 px-2 py-2 rounded-2xl bg-black/15 backdrop-blur-[2px] border border-amber-500/25 shadow-[0_0_15px_rgba(0,0,0,0.3)]">
           {CRACKER_LIST.map((item) => {
             const isSelected = (greeting.cracker || 'anar') === item.id;
             return (
@@ -513,8 +511,8 @@ export default function DiwaliCardApp() {
                 onClick={() => handleSelectCracker(item.id)}
                 className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black shadow-[0_0_16px_rgba(255,200,0,0.8)] scale-105 border-2 border-white'
-                    : 'bg-black/70 border border-amber-500/40 text-amber-200 hover:border-amber-300 hover:bg-black/90'
+                    ? 'bg-gradient-to-r from-amber-500/85 via-yellow-400/85 to-amber-500/85 backdrop-blur-[2px] text-black shadow-[0_0_16px_rgba(255,200,0,0.8)] scale-105 border-2 border-white'
+                    : 'bg-black/20 backdrop-blur-[2px] border border-amber-500/35 text-amber-200 hover:border-amber-300 hover:bg-black/40'
                 }`}
                 title={`${item.hindiName} जलाएं`}
               >
@@ -525,13 +523,13 @@ export default function DiwaliCardApp() {
           })}
         </div>
 
-        {/* Action Row: Next Shayari & Big Card Share Button (Three dot / slider clutter removed) */}
+        {/* Action Row: Transparent Next Shayari & Card Share Buttons */}
         <div className="w-full flex items-center justify-center gap-2.5 sm:gap-3.5 max-w-md mx-auto">
           {/* Next AI Shayari Button */}
           <button
             onClick={handleGenerateAiShayari}
             disabled={isGenerating}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 hover:from-amber-500 hover:to-yellow-400 text-black font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_18px_rgba(255,180,0,0.6)] active:scale-95 transition-all disabled:opacity-60 cursor-pointer border border-yellow-200"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600/75 via-yellow-500/75 to-amber-600/75 hover:from-amber-500/85 hover:to-yellow-400/85 backdrop-blur-[2px] text-black font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_18px_rgba(255,180,0,0.4)] active:scale-95 transition-all disabled:opacity-60 cursor-pointer border border-yellow-200/80"
             title="अगली AI शायरी"
           >
             {isGenerating ? (
@@ -550,7 +548,7 @@ export default function DiwaliCardApp() {
           {/* Big Prominent Share Button */}
           <button
             onClick={handleOpenShareModal}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.6)] active:scale-95 transition-all cursor-pointer border border-emerald-300"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600/75 via-green-500/75 to-teal-500/75 hover:from-emerald-500/85 hover:to-teal-400/85 backdrop-blur-[2px] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95 transition-all cursor-pointer border border-emerald-300/80"
             title="कार्ड शेयर करें"
           >
             <Send className="w-4 h-4" />

@@ -194,7 +194,7 @@ export function playBombSound() {
 /**
  * REAL Anar (Flowerpot Volcano) 10-second volcanic shower & hiss
  */
-export function playAnarSound(duration: number = 9.5) {
+export function playAnarSound(duration: number = 5.0) {
   const ctx = initAudio();
   if (!ctx) return;
   const now = ctx.currentTime;
@@ -205,8 +205,7 @@ export function playAnarSound(duration: number = 9.5) {
   const data = buffer.getChannelData(0);
   for (let i = 0; i < bufferSize; i++) {
     const t = i / ctx.sampleRate;
-    // Volcanic swell curve peaking around 4-6 seconds
-    const envelope = Math.min(1.0, t / 1.5) * (1.0 - Math.pow(Math.max(0, t - 6.5) / 3.0, 2));
+    const envelope = Math.min(1.0, t / 1.0) * (1.0 - Math.pow(Math.max(0, t - 3.5) / 1.5, 2));
     const microSpark = Math.random() > 0.82 ? 0.9 : 0.25;
     data[i] = (Math.random() * 2 - 1) * envelope * microSpark;
   }
@@ -217,14 +216,14 @@ export function playAnarSound(duration: number = 9.5) {
   const filter = ctx.createBiquadFilter();
   filter.type = 'bandpass';
   filter.frequency.setValueAtTime(1200, now);
-  filter.frequency.linearRampToValueAtTime(3800, now + 3.0);
+  filter.frequency.linearRampToValueAtTime(3800, now + 1.8);
   filter.frequency.linearRampToValueAtTime(2200, now + duration);
   filter.Q.setValueAtTime(1.8, now);
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.1, now);
-  gain.gain.linearRampToValueAtTime(0.65, now + 2.0);
-  gain.gain.linearRampToValueAtTime(0.6, now + 7.0);
+  gain.gain.linearRampToValueAtTime(0.65, now + 1.0);
+  gain.gain.linearRampToValueAtTime(0.6, now + 3.8);
   gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   source.connect(filter);
@@ -237,7 +236,7 @@ export function playAnarSound(duration: number = 9.5) {
 /**
  * REAL Ground Chakri (Spinning wheel with Doppler whirr + centrifugal spark spitting)
  */
-export function playChakriSound(duration: number = 9.5) {
+export function playChakriSound(duration: number = 5.0) {
   const ctx = initAudio();
   if (!ctx) return;
   const now = ctx.currentTime;
@@ -247,13 +246,13 @@ export function playChakriSound(duration: number = 9.5) {
   const oscGain = ctx.createGain();
   osc.type = 'sawtooth';
   osc.frequency.setValueAtTime(280, now);
-  osc.frequency.linearRampToValueAtTime(840, now + 1.2);
-  osc.frequency.linearRampToValueAtTime(620, now + 6.0);
+  osc.frequency.linearRampToValueAtTime(840, now + 0.8);
+  osc.frequency.linearRampToValueAtTime(620, now + 3.5);
   osc.frequency.linearRampToValueAtTime(180, now + duration);
 
   oscGain.gain.setValueAtTime(0.05, now);
-  oscGain.gain.linearRampToValueAtTime(0.28, now + 0.8);
-  oscGain.gain.linearRampToValueAtTime(0.22, now + 7.0);
+  oscGain.gain.linearRampToValueAtTime(0.28, now + 0.6);
+  oscGain.gain.linearRampToValueAtTime(0.22, now + 3.8);
   oscGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   osc.connect(oscGain);
@@ -279,7 +278,7 @@ export function playChakriSound(duration: number = 9.5) {
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.1, now);
-  gain.gain.linearRampToValueAtTime(0.4, now + 0.8);
+  gain.gain.linearRampToValueAtTime(0.4, now + 0.6);
   gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
 
   noise.connect(filter);
@@ -302,19 +301,19 @@ export function playRocketSound() {
   const oscGain = ctx.createGain();
   osc.type = 'sawtooth';
   osc.frequency.setValueAtTime(180, now);
-  osc.frequency.exponentialRampToValueAtTime(2200, now + 0.95);
+  osc.frequency.exponentialRampToValueAtTime(2200, now + 0.85);
 
   oscGain.gain.setValueAtTime(0.08, now);
-  oscGain.gain.linearRampToValueAtTime(0.45, now + 0.8);
-  oscGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+  oscGain.gain.linearRampToValueAtTime(0.45, now + 0.7);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
   osc.connect(oscGain);
   oscGain.connect(ctx.destination);
   osc.start(now);
-  osc.stop(now + 1.02);
+  osc.stop(now + 0.92);
 
-  // 2. Sky Explosion Boom (happens at now + 1.0)
-  const boomTime = now + 1.0;
+  // 2. Sky Explosion Boom (happens at now + 0.9)
+  const boomTime = now + 0.9;
   const boomOsc = ctx.createOscillator();
   const boomGain = ctx.createGain();
   boomOsc.type = 'sine';
@@ -355,7 +354,7 @@ export function playRocketSound() {
 /**
  * REAL Phuljhadi (Sparkler sizzling pops)
  */
-export function playSparklerSizzle(duration: number = 9.5) {
+export function playSparklerSizzle(duration: number = 5.0) {
   const ctx = initAudio();
   if (!ctx) return;
   const now = ctx.currentTime;

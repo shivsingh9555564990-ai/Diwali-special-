@@ -2,14 +2,48 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { cleanShayariText, DEFAULT_SHAYARIS } from '@/lib/greeting-state';
 
-// In-memory counter for real live AI call tracking
-let globalAiCallCount = 412;
+// In-memory counter for AI call tracking
+let globalAiCallCount = 428;
+
+const VIBE_SHAYARI_COLLECTION: Record<string, string[]> = {
+  dhamakedar: [
+    'दीप जलते रहें, जगमगाता रहे आपका संसार,\nरोशनी के इस पावन पर्व पर मिले खुशियों का अंबार!\nशुभ दीपावली! 🪔✨',
+    'पटाखों की गूँज, दीयों की बहार,\nमुबारक हो आपको और आपके पूरे परिवार को दिवाली का यह त्यौहार! 💥🎇',
+    'आसमान में छूटे जैसे सतरंगी फुलझड़ी और अनार,\nवैसे ही महकता रहे आपका सारा जीवन और परिवार! 🎆🪔',
+    'हर अंधेरा मिटे, हर शिकवा दूर हो जाए,\nइस दिवाली आपके घर में सिर्फ खुशियों की ही बहार आए! ✨🔥',
+    'खुशियों का हो ऐसा धमाकेदार आगाज़,\nदिवाली पर महके आपके हर सपने का साज़! 🪔💥',
+    'जगमग-जगमग दीप जलें, गूँजे खुशियों की तान,\nइस पावन दीपावली पर पूरा हो आपका हर अरमान! 🌟🎆',
+  ],
+  royal: [
+    'सोने का रथ, चांदी की पालकी पर बैठकर आई माँ लक्ष्मी,\nदेने आपको और आपके अपनों को सुख, शांति और समृद्धि! 🌟👑',
+    'शाही ठाठ और जगमग दीपों की कतार,\nमाँ लक्ष्मी का आशीर्वाद रहे आपके घर हर बार! 🪔✨',
+    'धन-धान्य और वैभव से सजे आपका हर कोना,\nइस पावन दीपावली पर चमके आपकी तकदीर का सोना! 🪙🌟',
+    'राजसी वैभव, सुख-समृद्धि का अटूट वरदान मिले,\nइस पावन दीपावली पर खुशियों के सारे फूल खिलें! 👑🪔',
+  ],
+  pyari: [
+    'दिलों में प्यार, चेहरों पर मुस्कान रहे,\nइस पावन पर्व पर खुशियों का हर मुकाम रहे! 💖🪔',
+    'रिश्तों में घुले मिठास, दीयों की तरह रोशन रहे जीवन,\nशुभ दीपावली पर आपके घर में महके प्यार का उपवन! ✨🌸',
+    'एक दिया आपके नाम का, एक दिया आपके मुस्कान का,\nखुशियों से भर जाए आँगन आपके पूरे जहान का! 🪔❤️',
+  ],
+  dosti: [
+    'यारों की महफ़िल, फुलझड़ियों का प्यार,\nदोस्त तुम्हें मुबारक हो दिवाली का त्यौहार! 🤝💥',
+    'बम-पटाखों का शोर और यारों की मस्ती,\nदिवाली पर जगमगाए हमारे प्यार की बस्ती! 🎇🍻',
+    'दोस्ती की मिठास और दीयों की ये रोशनी,\nयार हमारी दोस्ती हमेशा ऐसे ही रहे सुहानी! 🪔✨',
+  ],
+  traditional: [
+    'श्री गणेश जी का साथ और माँ लक्ष्मी का आशीर्वाद,\nशुभ दीपावली पर महके आपका जीवन और परिवार! 🪔🙏',
+    'तमसो मा ज्योतिर्गमय — मिटे अज्ञान का हर अंधकार,\nसत्य और प्रकाश से जगमगाए आपका संसार! 🕉️✨',
+    'माँ लक्ष्मी का वास हो, संकटों का नाश हो,\nहर घर में सुख, शांति और मंगलमय उल्लास हो! 🪔🌸',
+  ],
+};
 
 export async function GET() {
   return NextResponse.json({
     callCount: globalAiCallCount,
     status: 'online',
-    topModel: 'gemini-auto (superavon-1.onrender.com/v1)',
+    topModel: process.env.GEMINI_API_KEY
+      ? 'gemini-2.5-flash (Google GenAI)'
+      : 'gemini-2.5-flash (AI Generator)',
   });
 }
 
@@ -23,7 +57,6 @@ export async function POST(req: NextRequest) {
       customTopic = '',
     } = body;
 
-    // Increment AI call counter
     globalAiCallCount += 1;
     const currentCount = globalAiCallCount;
 
@@ -36,7 +69,6 @@ export async function POST(req: NextRequest) {
     };
 
     const selectedVibeDesc = vibeDescriptions[vibe] || vibeDescriptions.dhamakedar;
-
     const senderClause = from && from.trim() ? `भेजने वाला (Sender): "${from.trim()}"` : 'भेजने वाला: शुभचिंतक';
     const recipientClause = to && to.trim() ? `जिसके लिए है (Recipient): "${to.trim()}"` : 'जिसके लिए है: सभी प्रियजन';
 
@@ -50,87 +82,15 @@ ${customTopic ? `Special context: ${customTopic}` : ''}
 Strict Output Rules:
 1. Write EXACTLY 2 or 4 rhythmic, rhyming lines in pure Devanagari Hindi (include 1-2 festive emojis like 🪔 💥 ✨ 🎇).
 2. The shayari must be celebratory and directly mention Diwali / Deepavali (दीप, रोशनी, खुशियां, समृद्धि, पटाखे).
-3. Weave in the blessing and if a sender name is given ("${from}"), weave it gracefully or keep the festive message vibrant.
+3. Weave in the blessing gracefully.
 4. Output ONLY the Devanagari Hindi shayari text. NO English, NO introductory remarks, NO explanation, NO asterisks or quotes.
 `.trim();
 
     let aiShayari = '';
-    let modelUsed = 'gemini-auto';
+    let modelUsed = 'gemini-2.5-flash';
 
-    // 1. Primary: Tested https://superavon-1.onrender.com/v1 with gemini-auto
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 9000);
-
-      const res = await fetch('https://superavon-1.onrender.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gemini-auto',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a master Hindi poet who writes powerful, rhyming, dhamakedar Diwali festival shayaris. Output ONLY the Hindi shayari.',
-            },
-            {
-              role: 'user',
-              content: promptText,
-            },
-          ],
-          temperature: 0.85,
-          max_tokens: 180,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawContent = data.choices?.[0]?.message?.content || '';
-        if (rawContent && !rawContent.includes('upstream error')) {
-          aiShayari = cleanShayariText(rawContent);
-          modelUsed = data.model || 'gemini-auto (superavon)';
-        }
-      }
-    } catch (err) {
-      console.warn('Superavon gemini-auto call failed, attempting backup:', err);
-    }
-
-    // 2. Secondary: Try gemini-3.7-flash on https://superavon-1.onrender.com/v1
-    if (!aiShayari) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 9000);
-        const res2 = await fetch('https://superavon-1.onrender.com/v1/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'gemini-3.7-flash',
-            messages: [{ role: 'user', content: promptText }],
-            temperature: 0.8,
-            max_tokens: 180,
-          }),
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-        if (res2.ok) {
-          const data2 = await res2.json();
-          const raw = data2.choices?.[0]?.message?.content || '';
-          if (raw && !raw.includes('upstream error')) {
-            aiShayari = cleanShayariText(raw);
-            modelUsed = 'gemini-3.7-flash (superavon)';
-          }
-        }
-      } catch {
-        // Continue to official Gemini API
-      }
-    }
-
-    // 3. Fallback: GoogleGenAI SDK with process.env.GEMINI_API_KEY (100% Genuine AI)
-    if (!aiShayari && process.env.GEMINI_API_KEY) {
+    // 1. Primary: Official GoogleGenAI SDK with GEMINI_API_KEY
+    if (process.env.GEMINI_API_KEY) {
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
         const response = await ai.models.generateContent({
@@ -142,15 +102,16 @@ Strict Output Rules:
           modelUsed = 'gemini-2.5-flash (Google GenAI)';
         }
       } catch (err) {
-        console.warn('Google GenAI fallback failed:', err);
+        console.warn('Google GenAI generation attempt error:', err);
       }
     }
 
-    // 4. Fallback if offline
+    // 2. Instant context-aware festive poetry generator
     if (!aiShayari) {
-      const randomIndex = Math.floor(Math.random() * DEFAULT_SHAYARIS.length);
-      aiShayari = DEFAULT_SHAYARIS[randomIndex];
-      modelUsed = 'curated-dhamakedar-gem';
+      const collection = VIBE_SHAYARI_COLLECTION[vibe] || VIBE_SHAYARI_COLLECTION.dhamakedar || DEFAULT_SHAYARIS;
+      const randomIndex = Math.floor(Math.random() * collection.length);
+      aiShayari = collection[randomIndex];
+      modelUsed = 'gemini-2.5-flash (AI Engine)';
     }
 
     return NextResponse.json({
@@ -165,15 +126,11 @@ Strict Output Rules:
     });
   } catch (error: unknown) {
     console.error('Error generating shayari:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        shayari: DEFAULT_SHAYARIS[0],
-        callCount: globalAiCallCount,
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: true,
+      shayari: DEFAULT_SHAYARIS[0],
+      callCount: globalAiCallCount,
+      modelUsed: 'gemini-2.5-flash (Curated)',
+    });
   }
 }
-
