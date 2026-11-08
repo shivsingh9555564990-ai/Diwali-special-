@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Diwali Spark AI",
+  "description": "Create personalized, high-quality animated Diwali greeting cards with AI-powered quotes and real-time social sharing tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
